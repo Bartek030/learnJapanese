@@ -35,6 +35,9 @@ dependencies {
 	// mail
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
+	// security
+	implementation "io.jsonwebtoken:jjwt:${jjwtVersion}"
+
 	// annotation
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
