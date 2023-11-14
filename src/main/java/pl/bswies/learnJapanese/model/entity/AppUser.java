@@ -6,7 +6,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import pl.bswies.learnJapanese.model.enums.UserRole;
 
 import java.util.Collection;
 import java.util.List;
@@ -41,17 +43,13 @@ public class AppUser implements UserDetails {
     @Column(name = "locked")
     private Boolean locked;
 
-    @ManyToMany()
-    @JoinTable(
-            name = "app_user_role",
-            joinColumns = @JoinColumn(name = "id"),
-            inverseJoinColumns = @JoinColumn(name = "id")
-    )
-    private List<Role> roles;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private UserRole userRole;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return List.of(new SimpleGrantedAuthority(userRole.name()));
     }
 
     @Override
