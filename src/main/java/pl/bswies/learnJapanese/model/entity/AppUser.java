@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import pl.bswies.learnJapanese.model.enums.UserRole;
+import pl.bswies.learnJapanese.model.enums.AppUserRole;
 
 import java.util.Collection;
 import java.util.List;
@@ -45,11 +45,11 @@ public class AppUser implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    private UserRole userRole;
+    private AppUserRole appUserRole;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(userRole.name()));
+        return List.of(new SimpleGrantedAuthority(appUserRole.name()));
     }
 
     @Override

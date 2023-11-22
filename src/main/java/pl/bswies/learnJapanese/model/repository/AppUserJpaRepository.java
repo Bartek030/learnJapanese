@@ -5,7 +5,7 @@ import pl.bswies.learnJapanese.model.entity.AppUser;
 
 import java.util.Optional;
 
-public interface UserJpaRepository extends JpaRepository<AppUser, Long> {
+public interface AppUserJpaRepository extends JpaRepository<AppUser, Long> {
 
     Optional<AppUser> findByEmail(final String email);
 }

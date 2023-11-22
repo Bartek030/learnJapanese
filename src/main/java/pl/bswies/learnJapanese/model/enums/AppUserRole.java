@@ -1,5 +1,5 @@
 package pl.bswies.learnJapanese.model.enums;
 
-public enum UserRole {
+public enum AppUserRole {
     ADMIN, USER
 }

@@ -27,6 +27,8 @@ spring:
         order_inserts: true
   security:
     enabled: true
+    jwt-key: ???
+    jwt-expiration: 1440000
   mvc:
     hiddenmethod:
       filter:
