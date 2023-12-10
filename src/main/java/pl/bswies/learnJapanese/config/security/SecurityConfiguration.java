@@ -28,7 +28,7 @@ import java.util.List;
 public class SecurityConfiguration {
 
     private static final List<String> PERMITT_ALL_ENDPOINT_LIST = new ArrayList<>(List.of(
-
+            "/authenticate/**"
     ));
     
     private final JwtFilter jwtFilter;

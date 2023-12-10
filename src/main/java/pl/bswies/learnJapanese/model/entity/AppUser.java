@@ -21,7 +21,7 @@ import java.util.List;
 @Table(name = "app_user")
 public class AppUser implements UserDetails {
 
-    @jakarta.persistence.Id
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
