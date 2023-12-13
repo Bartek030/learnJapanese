@@ -16,13 +16,13 @@ import java.util.function.Function;
 
 @Slf4j
 @Service
-class JwtService {
+public class JwtService {
 
     @Value("${spring.security.jwt-key}")
-    private static String SECRET_KEY;
+    private String SECRET_KEY;
 
     @Value("${spring.security.jwt-expiration}")
-    private static Integer TOKEN_EXPIRATION_DURATION;
+    private Integer TOKEN_EXPIRATION_DURATION;
 
     public String extractUsernameFromToken(final String token) {
         return extractClaim(token, Claims::getSubject);

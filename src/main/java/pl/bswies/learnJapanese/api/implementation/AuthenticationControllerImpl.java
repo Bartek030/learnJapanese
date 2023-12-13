@@ -18,7 +18,7 @@ public class AuthenticationControllerImpl implements AuthenticationController {
     private final AuthenticationService service;
 
     @Override
-    public ResponseEntity<?> register(final RegisterRequest request) {
+    public ResponseEntity<String> register(final RegisterRequest request) {
         service.register(request);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
