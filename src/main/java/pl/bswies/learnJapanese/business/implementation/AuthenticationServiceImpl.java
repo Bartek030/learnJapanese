@@ -1,5 +1,6 @@
 package pl.bswies.learnJapanese.business.implementation;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,6 +11,7 @@ import pl.bswies.learnJapanese.api.dto.AuthenticationRequest;
 import pl.bswies.learnJapanese.api.dto.AuthenticationResponse;
 import pl.bswies.learnJapanese.api.dto.RegisterRequest;
 import pl.bswies.learnJapanese.business.AuthenticationService;
+import pl.bswies.learnJapanese.business.RegisterValidationService;
 import pl.bswies.learnJapanese.config.security.jwt.JwtService;
 import pl.bswies.learnJapanese.model.entity.AppUser;
 import pl.bswies.learnJapanese.model.enums.AppUserRole;
@@ -21,24 +23,28 @@ import pl.bswies.learnJapanese.model.repository.AppUserJpaRepository;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
-    private final AppUserJpaRepository appUserJpaRepository;
+    private final AppUserJpaRepository repository;
+    private final RegisterValidationService registerValidationService;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
     @Override
+    @Transactional
     public void register(final RegisterRequest request) {
+        registerValidationService.validateRegisterRequest(request);
         AppUser appUser = buildAppUser(request);
-        appUserJpaRepository.save(appUser);
+        repository.save(appUser);
     }
 
     @Override
+    @Transactional
     public AuthenticationResponse authenticate(final AuthenticationRequest request) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
 
         // TODO: Exception
-        final AppUser appUser = appUserJpaRepository.findByEmail(request.getEmail()).orElseThrow();
+        final AppUser appUser = repository.findByEmail(request.getEmail()).orElseThrow();
         return generateTokenForUser(appUser);
     }
 
