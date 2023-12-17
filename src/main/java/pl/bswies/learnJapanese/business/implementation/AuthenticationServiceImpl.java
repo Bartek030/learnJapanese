@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.bswies.learnJapanese.api.dto.AuthenticationRequest;
@@ -12,6 +13,7 @@ import pl.bswies.learnJapanese.api.dto.AuthenticationResponse;
 import pl.bswies.learnJapanese.api.dto.RegisterRequest;
 import pl.bswies.learnJapanese.business.AuthenticationService;
 import pl.bswies.learnJapanese.business.RegisterValidationService;
+import pl.bswies.learnJapanese.business.exceptions.AuthenticationException;
 import pl.bswies.learnJapanese.config.security.jwt.JwtService;
 import pl.bswies.learnJapanese.model.entity.AppUser;
 import pl.bswies.learnJapanese.model.enums.AppUserRole;
@@ -31,21 +33,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     @Transactional
     public void register(final RegisterRequest request) {
+        log.info("Registration process has begun for user [%s]".formatted(request.getEmail()));
         registerValidationService.validateRegisterRequest(request);
         AppUser appUser = buildAppUser(request);
         repository.save(appUser);
+        log.info("Registration process has finished for user [%s]".formatted(request.getEmail()));
     }
 
     @Override
     @Transactional
     public AuthenticationResponse authenticate(final AuthenticationRequest request) {
-        authenticationManager.authenticate(
+        final Authentication authenticate = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
-
-        // TODO: Exception
-        final AppUser appUser = repository.findByEmail(request.getEmail()).orElseThrow();
-        return generateTokenForUser(appUser);
+        return generateTokenForUser((AppUser) authenticate.getPrincipal());
     }
 
     private AppUser buildAppUser(final RegisterRequest request) {
