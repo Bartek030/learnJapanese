@@ -13,7 +13,6 @@ import pl.bswies.learnJapanese.api.dto.AuthenticationResponse;
 import pl.bswies.learnJapanese.api.dto.RegisterRequest;
 import pl.bswies.learnJapanese.business.AuthenticationService;
 import pl.bswies.learnJapanese.business.RegisterValidationService;
-import pl.bswies.learnJapanese.business.exceptions.AuthenticationException;
 import pl.bswies.learnJapanese.config.security.jwt.JwtService;
 import pl.bswies.learnJapanese.model.entity.AppUser;
 import pl.bswies.learnJapanese.model.enums.AppUserRole;
@@ -43,10 +42,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     @Transactional
     public AuthenticationResponse authenticate(final AuthenticationRequest request) {
+
         final Authentication authenticate = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
-        return generateTokenForUser((AppUser) authenticate.getPrincipal());
+        return buildAuthResponse((String) authenticate.getPrincipal());
     }
 
     private AppUser buildAppUser(final RegisterRequest request) {
@@ -61,10 +61,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
     }
 
-    private AuthenticationResponse generateTokenForUser(final AppUser appUser) {
-        final String newToken = jwtService.generateToken(appUser);
+    private AuthenticationResponse buildAuthResponse(final String username) {
         return AuthenticationResponse.builder()
-                .token(newToken)
+                .token(jwtService.generateToken(username))
                 .build();
     }
 }
