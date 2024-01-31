@@ -42,7 +42,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     @Transactional
     public AuthenticationResponse authenticate(final AuthenticationRequest request) {
-
+        log.info("Authentication process has begun for [%s]".formatted(request.getEmail()));
         final Authentication authenticate = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );

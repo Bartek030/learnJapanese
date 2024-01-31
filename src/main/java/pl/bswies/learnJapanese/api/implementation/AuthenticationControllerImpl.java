@@ -22,8 +22,7 @@ public class AuthenticationControllerImpl implements AuthenticationController {
         service.register(request);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body("");
+                .build();
     }
 
     @Override
